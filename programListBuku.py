@@ -19,21 +19,21 @@ while True:
 
     # menu awal
     print("""
-1. Tambah buku baru
+1. Tambah buku
 2. Update buku
 3. Delete buku
 4. Lihat list buku
 5. Keluar
     """)
 
-    while True:
-        inputMenu = (input("Pilih menu\t: "))
-        try:
-            value = int(inputMenu)
-            break
-        except:
-            print("Masukan input dengan benar!!")
-            input("Tekan enter untuk melanjutkan!")
+    inputMenu = input("Pilih menu\t: ")
+    try:
+        value = int(inputMenu)
+        inputMenu = int(inputMenu)
+    except ValueError:
+        print("Input harus berupa angka!!")
+        input("Tekan enter untuk melanjutkan!")
+        continue
 
     match inputMenu:
         case 1:
@@ -59,6 +59,41 @@ while True:
                     else:
                         print("Masukan input dengan benar!\n")
                         continue
+        case 2:
+            os.system('cls')
+            print("==== Daftar Buku ====")
+            if len(listBuku) == 0:
+                print("Buku masih kosong")
+                input("Tekan enter untuk melanjutkan!")
+            else:
+                print(tabulate(listBuku, headers=headerTable,   tablefmt="grid"))
+                inputUpdate = input("Masukan judul buku yang ingin di rubah\t: ")
+                for x in range(len(listBuku)):
+                    if listBuku[x][0] == inputUpdate:
+                        judulBaru = input("Masukan judul baru\t: ")
+                        listBuku[x][0] = judulBaru
+                        print("Judul berhasil di rubah!")
+                        input("Tekan enter untuk melanjutkan!")
+                    else:
+                        print("Tidak ada buku dengan judul seperti itu!")
+                        input("Tekan enter untuk melanjutkan!")
+                        break
+        case 3:
+            os.system('cls')
+            print("==== Daftar Buku ====")
+            if len(listBuku) == 0:
+                print("Buku masih kosong")
+                input("Tekan enter untuk melanjutkan!")
+            else:
+                print(tabulate(listBuku, headers=headerTable,   tablefmt="grid"))
+                inputDelete = input("Masukan judul buku yang ingin di hapus\t:")
+                for x in range(len(listBuku)):
+                    if listBuku[x][0] == inputDelete:
+                        listBuku.pop(x)
+                    else:
+                        print("Tidak ada buku dengan judul seperti itu!")
+                        input("Tekan enter untuk melanjutkan!")
+                        break
         case 4:
             os.system('cls')
             print("==== Daftar Buku ====")
