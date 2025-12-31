@@ -1,99 +1,109 @@
-# Program inventaris barang sederhana
+# Latihan membuat function
 
-# import
+# Import
 import os
-from tabulate import tabulate
 
-# kumpulan data
-dataKodeBarang = [
-    ("A001", "Elektronik"),
-    ("A002", "Furnitur"),
-    ("A003", "Perkakas")
-]
-
-dataBarang = {
-    "Kode" : [],
-    "Nama" : [],
-    "Kategori" : [],
-    "Stok" : []
+# kamus data
+funct_template = {
+    "kodeBarang" : "kodeBarang",
+    "nama" : "nama",
+    "kategori" : "kategori",
+    "stok" : "stok"
 }
 
-mulaiProgram = True
+dataBarang = {}
 
-while mulaiProgram:
-    # header program
+# kamus function
+def bersihkanLayar():
     os.system('cls')
-    print("="*30)
-    print("\tSelamat Datang")
-    print("di Program Inventaris Barang")
-    print("="*30)
 
-    print("""
-1. Tambah Barang
-2. Lihat Barang
-3. Tampilkan Kategori
-4. Cari Barang
-5. Keluar
-    """)
+def gerbang():
+    input("Tekan enter untuk melanjutkan!!")
 
-    inputMenu = input("Pilih menu\t: ")
+def header(judul):
+    bersihkanLayar()
+    print("="*40)
+    print(f"{judul:^40}")
+    print("="*40+"\n")
+
+def menu():
+    print("1. Tambah Barang")
+    print("2. Lihat Barang")
+    print("3. Cari Barang")
+    print("4. Keluar")
+
+
+def tambahBarang():
+    header("Tambahkan Barang Baru")
+    barang = dict.fromkeys(funct_template.keys())
+    cekKode = True
+    while cekKode:      
+        barang["kodeBarang"] = input("Masukan kode barang\t: ")
+        cekKode = False
+        for data in dataBarang:
+            if data == barang["kodeBarang"]:
+                print("Kode barang sudah ada!")
+                cekKode = True
+                break
+    barang["nama"] = input("Masukan nama barang\t: ")
+    barang["kategori"] = input("Masukan kategori barang\t: ")
+    barang["stok"] = input("Masukan stok barang\t: ")
+    dataBarang.update({barang["kodeBarang"]:barang})
+    gerbang()
+
+
+def lihatBarang():
+    header("Daftar-daftar Barang")
+    if not dataBarang:
+        print("Belum ada barang")
+    else:
+        print(f"{"Kode Barang":<15}|{"Nama":<20}|{"Kategori":<20}|{"Stok":<3}")
+        print("="*64)
+        for data in dataBarang:
+            print(f"{dataBarang[data]["kodeBarang"]:^15}|{dataBarang[data]["nama"]:<20}|{dataBarang[data]["kategori"]:<20}|{dataBarang[data]["stok"]:^3}")
+    gerbang()
+
+def cariBarang():
+    header("Daftar-daftar Barang")
+    if not dataBarang:
+        print("Belum ada barang")
+    else:
+        inputCari = input("Masukan kode barang yang ingin dicari\t: ")
+        ditemukan = False
+        for data in dataBarang:
+            if data == inputCari:
+                print(f"\n{"Kode Barang":<15}|{"Nama":<20}|{"Kategori":<20}|{"Stok":<3}")
+                print("="*60)
+                print(f"{dataBarang[data]["kodeBarang"]:^15}|{dataBarang[data]["nama"]:<20}|{dataBarang[data]["kategori"]:<20}|{dataBarang[data]["stok"]:^3}")
+                ditemukan = True
+                break
+        if ditemukan == False:
+            print("Barang tidak ditemukan!")
+    gerbang()
+
+# Progarm Dimulai
+while True:
+    header("Program Inventaris Barang")
+    menu()
+    inputMenu = input("\nMasukan menu\t: ")
     try:
         value = int(inputMenu)
     except ValueError:
-        print("\nInput harus berupa angka")
-        input("Tekan enter untuk melanjutkan!")
+        print("\nInput harus berupa angka!!")
+        gerbang()
         continue
-
     inputMenu = int(inputMenu)
-
     match inputMenu:
         case 1:
-            os.system('cls')
-            print("======= Tambah Barang =======")
-            print("\nKategori barang yang ada:")
-            print(tabulate(dataKodeBarang, headers=("Kode Barang", "Kategori"), tablefmt="grid"))
-
-            tambah = True
-            while tambah:
-                dataBarang["Kode"].append(input("Masukan kode barang\t: "))
-                dataBarang["Nama"].append(input("Masukan Nama barang\t: "))
-                dataBarang["Kategori"].append(input("Masukan Kategori barang\t: "))
-                dataBarang["Stok"].append(input("Masukan Stok barang\t: "))
-
-                tambahLagi = input("Ingin menambah data barang lagi? (y/t)\t: ")
-                if tambahLagi == "t":
-                    tambah = False
-                elif tambahLagi == "y":
-                    tambah = True
-                else:
-                    print("Masukan input yang benar!!\n")
-                    tambah = True
-        case 2: 
-            os.system('cls')
-            print(f"{"="*14} Daftar Barang {"="*14}")
-            if not all(dataBarang.values()):
-                print("\nBarang belum ada")
-                input("Tekan enter untuk melanjutkan!")
-            else:
-                print(f"{"Kode":<5} {"Nama":<15} {"Kategori":<15} {"Stok":^3}")
-                print("-"*43)
-                for x in range(len(dataBarang["Kode"])):
-                    Kode = dataBarang["Kode"][x]
-                    Nama = dataBarang["Nama"][x]
-                    Kategori = dataBarang["Kategori"][x]
-                    Stok = dataBarang["Stok"][x]
-                    print(f"{Kode:<5} {Nama:<15} {Kategori:<15} {Stok:^3}")
-                input("\nTekan enter untuk melanjutkan!")
-        case 3: 
-            os.system('cls')
-            print("======= Kategori Barang =======")
-            print(tabulate(dataKodeBarang, headers=("Kode Barang", "Kategori"), tablefmt="grid"))
-            input("Tekan enter untuk melanjutkan!")
-        case 5:
-            os.system('cls')
-            print("=========== Sampai jumpa lagi ===========")
-            print("Terima kasih telah menggunakan program ini")
-            mulaiProgram = False
+            tambahBarang()
+        case 2:
+            lihatBarang()
+        case 3:
+            cariBarang()
+        case 4:
+            os.system("cls")
+            print("Terima Kasih Telah Menggunakan Program Ini!!")
+            break
         case _:
-            print("\nHarap masukan menu yang tersedia!")
-            input("Tekan enter untuk melanjutkan!")
+            print("\nHarap masukan menu dengan benar!")
+            gerbang()
